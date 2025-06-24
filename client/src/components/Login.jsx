@@ -1,13 +1,28 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { assets } from '../assets/assets'
+import { AppContext } from '../context/AppContext';
+import { motion } from 'framer-motion';
 
 const Login = () => {
 
     const [state, setState] = useState('Login')
+    const { setShowLogin } = useContext(AppContext);
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden'
+        return () => {
+            document.body.style.overflow = 'unset'
+        }
+    }, [])
 
     return (
-        <div className='absolute left-0 top-0 right-0 bottom-0 z-10 backdrop-blur-sm bg-black/30 flex justify-center items-center'>
-            <form className='relative bg-white p-10 rounded-xl text-slate-500' action="">
+        <div className='fixed left-0 top-0 right-0 bottom-0 z-10 backdrop-blur-sm bg-black/30 flex justify-center items-center'>
+            <motion.form
+                initial={{ opacity: 0, y: 50 }}
+                transition={{ duration: 0.3 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className='relative bg-white p-10 rounded-xl text-slate-500' action="">
                 <h1 className='text-center text-2xl text-neutral-700'>{state}</h1>
                 <p className='text-sm'>Welcome back! Please sign in to continue</p>
 
@@ -28,14 +43,14 @@ const Login = () => {
                     Forgot Password?
                 </p>
 
-                <button className='bg-blue-600 w-full text-white py-2 rounded-full mt-5'>{state == 'Login' ? 'login' : 'create account'}</button>
+                <button className='bg-blue-600 w-full text-white py-2 rounded-full mt-5'>{state == 'Login' ? 'Login' : 'Create Account'}</button>
 
                 {state === 'Login' ? <p className='mt-5 text-center'>Don't have an account? <span className='text-blue-600 cursor-pointer ' onClick={() => setState('Sign Up')}>Sign Up</span></p>
                     :
-                    <p className='mt-5 text-center'>Already have an account? <span className='text-blue-600 cursor-pointer'>Login</span></p>}
+                    <p className='mt-5 text-center'>Already have an account? <span className='text-blue-600 cursor-pointer' onClick={() => setState('Login')}>Login</span></p>}
 
-                <img src={assets.cross_icon} className='absolute top-5 right-5 cursor-pointer' alt="" />
-            </form>
+                <img onClick={() => setShowLogin(false)} src={assets.cross_icon} className='absolute top-5 right-5 cursor-pointer' alt="" />
+            </motion.form>
         </div>
     )
 }
