@@ -13,7 +13,8 @@ const userAuth = async (req, res, next) => {
         
 
         if (tokenDecode.id) {
-            req.user = { id: tokenDecode.id };
+            // req.userId = { id: tokenDecode.id };
+            req.userId = tokenDecode.id;
 
         }else{
             return res.json({
