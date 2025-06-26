@@ -1,23 +1,33 @@
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';     
 
 const userAuth = async (req, res, next) => {
+    const { token } = req.headers;
+    if (!token) {
+        return res.json({
+            success: false,
+            message: "No token provided, authorization denied"
+        });        
+    }
     try {
-        const {token} = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-            return res.status(401).json({ message: "Unauthorized access" });
+        const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
+        
+
+        if (tokenDecode.id) {
+            req.user = { id: tokenDecode.id };
+
+        }else{
+            return res.json({
+                success: false,
+                message: "Invalid token"
+            });
         }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        if (!decoded.id) {
-            return res.status(401).json({ message: "Invalid token" });
-
-            //STOPPED HERE
-}
-        req.user = decoded; // Attach user info to request object
-        next(); // Proceed to the next middleware or route handler
+        next();
     } catch (error) {
-        console.error("Authentication error:", error);
-        res.status(401).json({ message: "Invalid token" });
+        res.json({
+            success: false,
+            message: "Invalid tokenyoyo",
+        });
     }
 }
+
+export default userAuth;
