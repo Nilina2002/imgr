@@ -1,5 +1,5 @@
 import userModel from "../models/userModel.js";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const registerUser = async (req, res) => {
@@ -78,3 +78,24 @@ const loginUser = async (req, res) => {
         })
     }
 }
+
+const userCredits = async (req, res) => {
+    try{
+        const {userId} = req.body;
+        const user = await userModel.findById(userId);
+        res.json({
+            success: true,
+            credits: user.creditBalance,user: {
+                name: user.name }
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.json({
+            success: false,
+            message: "Error in fetching user credits",
+        });
+    }
+}
+
+export { registerUser, loginUser };
