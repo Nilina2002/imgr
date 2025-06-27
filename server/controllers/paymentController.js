@@ -7,7 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const createPaymentIntent = async (req, res) => {
     try {
         const { amount, planId, credits } = req.body;
-        const userId = req.user.id;
+        const userId = req.userId;
 
         if (!amount || !planId || !credits) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -38,7 +38,7 @@ export const createPaymentIntent = async (req, res) => {
 export const confirmPayment = async (req, res) => {
     try {
         const { paymentIntentId } = req.body;
-        const userId = req.user.id;
+        const userId = req.userId;
 
         // Retrieve payment intent from Stripe
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);

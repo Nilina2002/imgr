@@ -1,6 +1,6 @@
 import express from 'express';
 import { createPaymentIntent, confirmPayment, handleWebhook } from '../controllers/paymentController.js';
-import { protect } from '../middlewares/auth.js';
+import userAuth from '../middlewares/auth.js';
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/webhook', express.raw({ type: 'application/json' }), handleWebhook);
 
 // Protected routes
-router.post('/create-payment-intent', protect, createPaymentIntent);
-router.post('/confirm-payment', protect, confirmPayment);
+router.post('/create-payment-intent', userAuth, createPaymentIntent);
+router.post('/confirm-payment', userAuth, confirmPayment);
 
 export default router; 
